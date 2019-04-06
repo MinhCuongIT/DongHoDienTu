@@ -140,6 +140,7 @@
             // 
             // btnPause
             // 
+            this.btnPause.Enabled = false;
             this.btnPause.Location = new System.Drawing.Point(130, 115);
             this.btnPause.Name = "btnPause";
             this.btnPause.Size = new System.Drawing.Size(75, 33);
@@ -150,6 +151,7 @@
             // 
             // btnResume
             // 
+            this.btnResume.Enabled = false;
             this.btnResume.Location = new System.Drawing.Point(211, 115);
             this.btnResume.Name = "btnResume";
             this.btnResume.Size = new System.Drawing.Size(75, 33);
@@ -160,6 +162,7 @@
             // 
             // btnStop
             // 
+            this.btnStop.Enabled = false;
             this.btnStop.Location = new System.Drawing.Point(291, 115);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(75, 33);
@@ -201,6 +204,7 @@
             // timerDigit
             // 
             this.timerDigit.Interval = 1000;
+            this.timerDigit.Tick += new System.EventHandler(this.timerDigit_Tick);
             // 
             // groupBox2
             // 

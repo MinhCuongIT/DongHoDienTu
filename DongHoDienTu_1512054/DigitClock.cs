@@ -15,21 +15,36 @@ namespace DongHoDienTu_1512054
     {
 
         #region Properties
+        /// <summary>
+        /// Mảng các hình ảnh
+        /// </summary>
         private ArrayList arrayList;
-        private int ipic1=0, ipic2=0, ipic3=0, ipic4=0;
+        /// <summary>
+        /// index của các hình anh trong picturebox
+        /// </summary>
+        private int ipic1 = 0, ipic2 = 0, ipic3 = 0, ipic4 = 0;
 
-        
+        /// <summary>
+        /// Form chứa Usercontrol này
+        /// </summary>
+        private Form frm;
 
+        /// <summary>
+        /// Cờ hiệu kiểm tra tính năng tự đóng cửa sổ
+        /// </summary>
+        private bool flag = false;
         #endregion
 
         #region Constructor
-        public DigitClock()
+        /// <summary>
+        /// Hàm dựng mặc định
+        /// </summary>
+        public DigitClock(Form form)
         {
             InitializeComponent();
+            this.frm = form;
             arrayList = new ArrayList(getArrayImages());
         }
-
-        
         #endregion
 
         #region Events
@@ -42,6 +57,7 @@ namespace DongHoDienTu_1512054
         {
             if (this.chkTurnOn.Checked)
             {
+                this.btnStop_Click(null, null);
                 this.label1.Enabled = true;
                 this.txtTime.Enabled = true;
                 this.btnRun.Enabled = true;
@@ -88,7 +104,6 @@ namespace DongHoDienTu_1512054
             this.btnPause.Enabled = true;
             this.btnResume.Enabled = false;
         }
-
         /// <summary>
         /// Khởi động Usercontrol
         /// </summary>
@@ -98,24 +113,83 @@ namespace DongHoDienTu_1512054
         {
             startClock();
         }
-
+        /// <summary>
+        /// Dừng lại
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnStop_Click(object sender, EventArgs e)
         {
             this.timerDigit.Enabled = false;
             this.btnStart.Enabled = true;
             this.btnPause.Enabled = false;
             this.btnStop.Enabled = false;
+            if (this.chkTurnOn.Checked && !btnRun.Enabled)
+            {
+                this.btnRun.Enabled = true;
+            }
 
             startClock();
         }
-
-        
-
+        /// <summary>
+        /// Chạy chương trình đóng cửa sổ
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnRun_Click(object sender, EventArgs e)
         {
-
+            this.flag = true;
+            this.btnStart_Click(null, null);
+            this.btnRun.Enabled = false;
         }
-
+        /// <summary>
+        /// Xử lí khi đồng hồ chạy
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private int count = 0;
+        private void timerDigit_Tick(object sender, EventArgs e)
+        {
+            this.count++;
+            this.ipic4++;
+            if (this.ipic4 > 9)
+            {
+                this.ipic4 = 0;
+                this.pb4.Image = (Image)arrayList[this.ipic4];
+                this.ipic3++;
+                if (this.ipic3 == 6)
+                {
+                    this.ipic3 = 0;
+                    this.pb3.Image = (Image)arrayList[this.ipic3];
+                    this.ipic2++;
+                    if (this.ipic2 > 9)
+                    {
+                        this.ipic2 = 0;
+                        this.pb2.Image = (Image)arrayList[this.ipic2];
+                        this.ipic1++;
+                        this.pb1.Image = (Image)arrayList[this.ipic1];
+                        if (this.ipic1 == 6)
+                            return;
+                    }
+                    this.pb2.Image = (Image)arrayList[this.ipic2];
+                    return;
+                }
+                this.pb3.Image = (Image)arrayList[this.ipic3];
+                return;
+            }
+            this.pb4.Image = (Image)arrayList[this.ipic4];
+            //bật chươn trình đóng cửa sổ
+            if (this.flag && ((this.count / 60) == int.Parse(this.txtTime.Text)))
+            {
+                this.timerDigit.Stop();
+                this.frm.Close();
+            }
+        }
+        /// <summary>
+        /// Chỉ cho nhập số
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtTime_KeyPress(object sender, KeyPressEventArgs e)
         {
             e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
@@ -130,7 +204,6 @@ namespace DongHoDienTu_1512054
         private ArrayList getArrayImages()
         {
             ArrayList a = new ArrayList();
-            a.Add(Properties.Resources._);
             a.Add(Properties.Resources._0);
             a.Add(Properties.Resources._1);
             a.Add(Properties.Resources._2);
@@ -150,10 +223,10 @@ namespace DongHoDienTu_1512054
         {
             ipic1 = 0; ipic2 = 0; ipic3 = 0; ipic4 = 0;
             // Bắt đầu từ 00-00
-            this.pb1.BackgroundImage = (Image)arrayList[ipic1];
-            this.pb2.BackgroundImage = (Image)arrayList[ipic2];
-            this.pb3.BackgroundImage = (Image)arrayList[ipic3];
-            this.pb4.BackgroundImage = (Image)arrayList[ipic4];
+            this.pb1.Image = (Image)arrayList[ipic1];
+            this.pb2.Image = (Image)arrayList[ipic2];
+            this.pb3.Image = (Image)arrayList[ipic3];
+            this.pb4.Image = (Image)arrayList[ipic4];
         }
         #endregion
 
